@@ -8,10 +8,13 @@ import axios from 'axios'
 import Header from './Header'
 import Generos from './Generos'
 import NovoGenero from './NovoGenero'
+import EditarGenero from './EditarGenero'
 
 const Home = () => {
   return <h1>Home</h1>
 }
+
+
 
 function App() {
   const [ data, setData ] = useState({})
@@ -25,8 +28,9 @@ function App() {
       <div>
         <Header />
         <Route exact path='/' component={Home} />
-        <Route path='/generos/novo' exact component={NovoGenero}/>
+        <Route path='/generos/:id' exact component={EditarGenero}/>
         <Route path='/generos' exact component={Generos} />
+        <Route path='/generos/novo' exact component={NovoGenero}/>
         
         <pre>{JSON.stringify(data)}</pre>
       </div>

@@ -25,7 +25,10 @@ const Generos = () => {
       <tr key={recorde.id}>
         <th scope="row">{recorde.id}</th>
         <td>{recorde.name}</td>
-        <td><button onClick={() => deleteGenero(recorde.id)}>-</button></td>
+        <td>
+          <button className='btn btn-danger' onClick={() => deleteGenero(recorde.id)}>Remover</button>
+          <Link className='btn btn-warning' to={'/generos/' + recorde.id}>Editar</Link>
+        </td>
       </tr>
     )
   }
@@ -45,7 +48,7 @@ const Generos = () => {
   return (
     <div className='container'>
       <h1>Genêros</h1>
-      <Link to='/generos/novo'>Novo genêro</Link>
+      <Link className='btn btn-primary' to='/generos/novo'>Novo genêro</Link>
       {/* <pre>{JSON.stringify(data)}</pre> */}
       <table className="table table-dark">
         <thead>
