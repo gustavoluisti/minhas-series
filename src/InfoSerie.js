@@ -4,14 +4,16 @@ import { Redirect } from 'react-router-dom'
 import { Badge } from 'reactstrap'
 
 const InfoSerie = ({ match }) => {
-    const [name, setName] = useState('')
+    const [form, setForm] = useState('')
     const [success, setSuccess] = useState(false)
+    const [ mode, setMode] = useState('INFO')
 
     const [data, setData] = useState({})
     useEffect(() => {
         axios.get('/api/series/' + match.params.id)
             .then(res => {
                 setData(res.data)
+                setForm(res.data)
             })
     }, [match.params.id])
 
@@ -27,13 +29,18 @@ const InfoSerie = ({ match }) => {
 
 
 
-    const onChange = evt => {
-        setName(evt.target.value)
+    const onChange = field => evt => {
+        setForm({ ...form, 
+            [field]: evt.target.value})
+    }
+
+    const onChange2 = evt => {
+        setForm({ ...form, comments: evt.target.value})
     }
 
     const save = () => {
         axios.post('/api/series', {
-            name
+            form
         })
             .then(res => {
                 console.log(res)
@@ -57,24 +64,36 @@ const InfoSerie = ({ match }) => {
                             <div className='col-8'>
                                 <h1 className='font-weight-light text-white'>{data.name}</h1>
                                 <div className='lead text-white'>
-                                    <Badge>Teste</Badge>
+                                    <Badge color='success'>Assistido</Badge>
+                                    <Badge color='warning'>Para assistir</Badge>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
-            <div className='container'>
-                <h1>Nova Serie {name}</h1>
-                <pre>{JSON.stringify(data)}</pre>
+            <div>
+                <button className="btn btn-primary" onClick={()=> setMode('EDIT')}>Editar</button>
+            </div>
+            {
+                mode === 'EDIT' &&
+                <div className='container'>
+                <h1>Nova Serie</h1>
+                <pre>{JSON.stringify(form)}</pre>
                 <form>
                     <div className="form-group">
                         <label >Nome</label>
-                        <input type="text" value={name} onChange={onChange} className="form-control" id="name" placeholder="Nome da série" />
+                        <input type="text" value={form.name} onChange={onChange('name')} className="form-control" id="name" placeholder="Nome da série" />
+                    </div>
+                    <div className="form-group">
+                        <label >Comenário</label>
+                        <input type="text" value={form.comments} onChange={onChange('comments')} className="form-control" id="name" placeholder="Nome da série" />
                     </div>
                 </form>
                 <button type='button' onClick={save} className="btn btn-primary">Salvar Genêro</button>
+                <button className='btn btn-warning ml-3' onClick={()=> setMode('INFO')}>Cancelar</button>
             </div>
+            }
         </div>
 
     )
